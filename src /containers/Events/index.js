@@ -14,22 +14,31 @@ const EventList = () => {
   const [type, setType] = useState();
   const [currentPage, setCurrentPage] = useState(1);
 
-  const filteredEvents = (data?.events || [])
-    .filter((event) => {
-      if (!type || event.type === type) {
+  const filteredEvents = (
+    (!type
+      ? data?.events
+      : // Ajout filter en fonction du type ( code avant modif -:data?.events) || []-)
+        data?.events.filter((event) => event.type === type)) || []
+  )
+    // vérifier si la variable type est définie. Si type n'est pas défini (!type est vrai),
+    // Tous les événements (data?.events) sont renvoyés.
+    // Sinon, les événements sont filtrés pour inclure uniquement ceux dont le type correspond à la valeur de type.
+    .filter((event, index) => {
+      if (
+        (currentPage - 1) * PER_PAGE <= index &&
+        PER_PAGE * currentPage > index
+      ) {
         return true;
       }
-      return false;
-    })
-    .slice((currentPage - 1) * PER_PAGE, currentPage * PER_PAGE);
 
+      return false;
+    });
   const changeType = (evtType) => {
     setCurrentPage(1);
     setType(evtType);
   };
   const pageNumber = Math.floor((filteredEvents?.length || 0) / PER_PAGE) + 1;
   const typeList = new Set(data?.events.map((event) => event.type));
-
   return (
     <>
       {error && <div>An error occured</div>}

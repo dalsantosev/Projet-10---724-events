@@ -30,14 +30,13 @@ export const DataProvider = ({ children }) => {
     if (data) return;
     getData();
   });
-
+  
   return (
     <DataContext.Provider
       // eslint-disable-next-line react/jsx-no-constructed-context-values
       value={{
         data,
         error,
-        last: data && data.events ? data.events[data.events.length - 1] : null,
       }}
     >
       {children}
@@ -47,7 +46,7 @@ export const DataProvider = ({ children }) => {
 
 DataProvider.propTypes = {
   children: PropTypes.node.isRequired,
-};
+}
 
 export const useData = () => useContext(DataContext);
 
